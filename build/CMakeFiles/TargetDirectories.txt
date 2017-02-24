@@ -1,0 +1,1 @@
+/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard/build/CMakeFiles/calibrate.dir
