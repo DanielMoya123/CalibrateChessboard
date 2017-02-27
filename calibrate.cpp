@@ -86,7 +86,7 @@ int calibrateImages(vector<string> imageList, int size)
 /*
 Tomar todas las fotos que el usuario desee para usarlas posteriormente en la calibración
 */
-void tomaImagenes()
+void takeImages()
 {
   //Toma una fotografía y pregunta si quiere tomar otra.
   
@@ -112,7 +112,7 @@ void tomaImagenes()
 /*
  Tomar los parametros en formato YAML y dibujar los ejes en tiempo real
 */
-void dibujaEjes(Point center,Point X, Point Y, PointZ)
+void drawAxes(Point center,Point X, Point Y, PointZ)
 {
   //Leer YAML 
 
