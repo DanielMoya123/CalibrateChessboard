@@ -60,6 +60,8 @@ void tomaImagenes()
   //Toma una fotografía y pregunta si quiere tomar otra.
 }
 
+
+
 /*
  Tomar los parametros en formato YAML y dibujar los ejes en tiempo real
 */
