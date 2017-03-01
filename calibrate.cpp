@@ -7,83 +7,54 @@
 #include "opencv2/calib3d/calib3d.hpp"
 #include "opencv2/highgui/highgui.hpp"
 
-
 #include <string.h>
 #include <cctype>
 
 using namespace cv;
 using namespace std;
 
+/***************************************
+ * Constant Values
+ ***************************************/
+
+const Size boardSize(7,6);
+const Size imageSize(800,600);
 
 
-void readYAML(){
+
+// Function to read the yml file
+bool readYAML(Mat cameraMatrix, Mat distCoeffs){
   
-  FileStorage fs2("test.yml", FileStorage::READ);
+	FileStorage fs2("calibrate.yml", FileStorage::READ);
+	
+	if(FileStorage::isOpened()){
+	 
+		Mat cameraMatrix2, distCoeffs2;
+		fs2["cameraMatrix"] >> cameraMatrix2;
+		fs2["distCoeffs"] >> distCoeffs2;
+		cameraMatrix = cameraMatrix2;
+		distCoeff = distCoeff2;
+		
+		fs2.release();
 
-// first method: use (type) operator on FileNode.
-int frameCount = (int)fs2["frameCount"];
 
-std::string date;
-// second method: use FileNode::operator >>
-fs2["calibrationDate"] >> date;
-
-Mat cameraMatrix2, distCoeffs2;
-fs2["cameraMatrix"] >> cameraMatrix2;
-fs2["distCoeffs"] >> distCoeffs2;
-
-cout << "frameCount: " << frameCount << endl
-     << "calibration date: " << date << endl
-     << "camera matrix: " << cameraMatrix2 << endl
-     << "distortion coeffs: " << distCoeffs2 << endl;
-
-FileNode features = fs2["features"];
-FileNodeIterator it = features.begin(), it_end = features.end();
-int idx = 0;
-std::vector<uchar> lbpval;
-
-// iterate through a sequence using FileNodeIterator
-for( ; it != it_end; ++it, idx++ )
-{
-    cout << "feature #" << idx << ": ";
-    cout << "x=" << (int)(*it)["x"] << ", y=" << (int)(*it)["y"] << ", lbp: (";
-    // you can also easily read numerical arrays using FileNode >> std::vector operator.
-    (*it)["lbp"] >> lbpval;
-    for( int i = 0; i < (int)lbpval.size(); i++ )
-        cout << " " << (int)lbpval[i];
-    cout << ")" << endl;
-}
-fs.release();
-
-// corners = pointbuf de la funcion findChessboardCorners
-// imgpts = outputImagePoints de la funcion projectPoints
-cout << "Ready to draw axes..." << endl;
-drawAxes(corners, imgpts);
   
+
+		cout << "Ready to draw axes..." << endl;
+		drawAxes(corners, imgpts);
+
+		return true;
+	}else{
+		return false;
+	}
+
 }
 
-void writeYAML(const Mat& cameraMatrix, const Mat& distCoeffs){ //Se agregan parámetros de entrada
+// Function to write the yml file
+void writeYAML(const Mat& cameraMatrix, const Mat& distCoeffs){ 
   
-  FileStorage fs("test.yml", FileStorage::WRITE);
-
-    fs << "frameCount" << 5;
-    time_t rawtime; time(&rawtime);
-    fs << "calibrationDate" << asctime(localtime(&rawtime));
-    //Mat cameraMatrix = (Mat_<double>(3,3) << 1000, 0, 320, 0, 1000, 240, 0, 0, 1);
-    //Mat distCoeffs = (Mat_<double>(5,1) << 0.1, 0.01, -0.001, 0, 0);
-    fs << "cameraMatrix" << cameraMatrix << "distCoeffs" << distCoeffs;
-    fs << "features" << "[";
-    for( int i = 0; i < 3; i++ )
-    {
-        int x = rand() % 640;
-        int y = rand() % 480;
-        uchar lbp = rand() % 256;
-
-        fs << "{:" << "x" << x << "y" << y << "lbp" << "[:";
-        for( int j = 0; j < 8; j++ )
-            fs << ((lbp >> j) & 1);
-        fs << "]" << "}";
-    }
-    fs << "]";
+	FileStorage fs("calibrate.yml", FileStorage::WRITE);
+	fs << "cameraMatrix" << cameraMatrix << "distCoeffs" << distCoeffs;
     fs.release();
     return 0;
   
@@ -100,44 +71,36 @@ void writeYAML(const Mat& cameraMatrix, const Mat& distCoeffs){ //Se agregan par
 */
 int calibrateImages(vector<string> imageList, int size)
 {
-  bool found;
-  Mat view;
-  vector<Point2f> pointbuf;
-  Size boardSize(7,6); //Interior number of corners (cambio para que quede impar,par)
-  int numSquares = boardSize.height * boardSize.width; // The number of squares
-  vector<vector<Point3f>> objectPoints; 
-  vector<vector<Point2f>> imagePoints;  
+	bool found;
+	Mat view;
+	vector<Point2f> pointbuf;
+	int numSquares = boardSize.height * boardSize.width; // The number of squares
+	vector<vector<Point3f>> objectPoints; 
+	vector<vector<Point2f>> imagePoints;  
 
-  // Iterate over all images
-  for (int i = 0; i < size; i++){
+	// Iterate over all images
+	for (int i = 0; i < size; i++){
 	
-	// Generate the matrix for this image
-    view = imread(imageList[i], 1);
-	 
-    found = findChessboardCorners(view, boardSize, pointbuf, CV_CALIB_CB_ADAPTIVE_THRESH);
-
-    //imageSize – Image size in pixels used to initialize the principal point.
-    Size imageSize(800,600);
-    
-    vector<Point3f> obj;
-    
-    
-    for(int j=0;j<numSquares;j++) 
-		obj.push_back(Point3f(j/boardSize.width, j%boardSize.width, 0.0f));
-		
-	imagePoints.push_back(pointbuf);
-	objectPoints.push_back(obj);
+		// Generate the matrix for this image
+		view = imread(imageList[i], 1);
+		found = findChessboardCorners(view, boardSize, pointbuf, CV_CALIB_CB_ADAPTIVE_THRESH);
+		vector<Point3f> obj;
+		for(int j=0;j<numSquares;j++) 
+			obj.push_back(Point3f(j/boardSize.width, j%boardSize.width, 0.0f));
+			
+		imagePoints.push_back(pointbuf);
+		objectPoints.push_back(obj);
 
 	}
-
+	
+	
+    //imageSize – Image size in pixels used to initialize the principal point.
     Mat cameraMatrix =  initCameraMatrix2D(objectPoints, imagePoints, imageSize);
 
 	
 	//Mat cameraMatrix = Mat(3, 3, CV_32FC1); 
 	Mat distCoeffs; 
-	vector<Mat> rvecs; 
-	vector<Mat> tvecs;
-	
+	vector<Mat> rvecs,tvecs;
 	
 	//We modify the intrinsic matrix with whatever we do know.
 	//The camera's aspect ratio is 1 (that's usually the case... If not, change it as required).
@@ -145,27 +108,42 @@ int calibrateImages(vector<string> imageList, int size)
     //cameraMatrix.ptr<float>(0)[0] = 1;
     //cameraMatrix.ptr<float>(1)[1] = 1;
 
-    double result = calibrateCamera(objectPoints, imagePoints, imageSize, cameraMatrix, distCoeffs, rvecs, tvecs);
-
+	calibrateCamera(objectPoints, imagePoints, imageSize, cameraMatrix, distCoeffs, rvecs, tvecs);
     cout << "Camera Matriz and Dist-coeffs calculated" << endl;
-
-    writeYAML(cameraMatrix, distCoeffs)
-
+    writeYAML(cameraMatrix, distCoeffs);
     cout << "Camera Matriz and Dist-coeffs saved" << endl;
-
-
-
-//////Parte de otra funcion
-
-    bool temp2 =  solvePnP(objectPoints, imagePoints, cameraMatrix, distCoeffs, rvecs, tvecs);
-    
-    vector<Point2f> outputImagePoints;
-
-    projectPoints(objectPoints, rvecs, tvecs, cameraMatrix, distCoeffs, outputImagePoints);
-
   
 }
 
+vector<Point2f> DrawAxis(Mat imageList)
+{
+	bool found;
+	Mat view;
+	vector<Point2f> pointbuf;
+	
+	int numSquares = boardSize.height * boardSize.width; // The number of squares
+	vector<vector<Point3f>> objectPoints; 
+	vector<vector<Point2f>> imagePoints;  
+	
+	// Generate the matrix for this image
+	view = imageList
+	found = findChessboardCorners(view, boardSize, pointbuf, CV_CALIB_CB_ADAPTIVE_THRESH);
+	vector<Point3f> obj;
+	for(int j=0;j<numSquares;j++) 
+		obj.push_back(Point3f(j/boardSize.width, j%boardSize.width, 0.0f));
+			
+	imagePoints.push_back(pointbuf);
+	objectPoints.push_back(obj);
+	
+	vector<Mat> rvecs; 
+	vector<Mat> tvecs;
+
+    bool temp2 =  solvePnP(objectPoints, imagePoints, cameraMatrix, distCoeffs, rvecs, tvecs);
+    vector<Point2f> outputImagePoints;
+    projectPoints(objectPoints, rvecs, tvecs, cameraMatrix, distCoeffs, outputImagePoints);
+    
+    return outputImagePoints;
+}
 
 /*
 Tomar todas las fotos que el usuario desee para usarlas posteriormente en la calibración
@@ -173,7 +151,6 @@ Tomar todas las fotos que el usuario desee para usarlas posteriormente en la cal
 void takeImage(string Num)
 {
 
-  
 	// Take the photo
 	VideoCapture capture = VideoCapture(0);
   
@@ -196,10 +173,10 @@ void takeImage(string Num)
 /*
  Tomar los parametros en formato YAML y dibujar los ejes en tiempo real
 */
-void drawAxes(corners, imgpts)
+void drawAxes()
 {
   
-    CvCapture* capture = cvCaptureFromFile( "MOV.MPG" );  
+    CvCapture* capture = cvCaptureFromCAM(0);
     IplImage* frame = cvQueryFrame( capture );
          
     // Can't get device? Complain and quit  
@@ -216,10 +193,12 @@ void drawAxes(corners, imgpts)
  
         //Draw the lines     
         Mat imageLines = frameMat.clone(); 
-         
-        arrowedLine(imageLines, corners[0], imgpts[0], Scalar(255,  0,   0));
-		arrowedLine(imageLines, corners[0], imgpts[1], Scalar(0,  255,   0));
-		arrowedLine(imageLines, corners[0], imgpts[2], Scalar(0,    0, 255));
+        
+        vector<Point2f> outputPoints = DrawAxis(imageLines);
+        
+        arrowedLine(imageLines, outputPoints[0], outputPoints[1], Scalar(255,  0,   0));
+		arrowedLine(imageLines, outputPoints[0], outputPoints[2], Scalar(0,  255,   0));
+		arrowedLine(imageLines, outputPoints[0], outputPoints[3], Scalar(0,    0, 255));
              
         imshow("video", contourImage);
         cvWaitKey(40);
@@ -237,54 +216,56 @@ void drawAxes(corners, imgpts)
 int main(int argc, char *argv[])
 {
 
-  bool endCalibration = false;
-  vector<string> imageList
+   if (argc > 2) {
 
-
-   if (argc > 1) {
-
-    if (std::string(argv[1])=="-h") {
+    if (std::string(argv[1])=="-h" || std::string(argv[1])=="--help") {
        help();
        return EXIT_SUCCESS;
     }
+	
+	if (std::string(argv[1])=="-c" || std::string(argv[1])=="--calibrate" ){
+	
+		cout << "Taking pictures for future calibration..." << endl;
+		vector<string> imageList;
+		int num = 0;
+		char r = 'n';
+		
+		while (r != 'n')
+		{
+		  takeImage(num);
+		  num++;
+		  imageList.push_back("test"+std::to_string(num));
+		  cout << "Do you want to take another picture for calibration?[y/n]" << endl;
+		  cin >> r;
+		}
 
-    cout << "Taking pictures for future calibration..." << endl;
-    int num = 0;
-    while (endCalibration == false)
-    {
-      takeImage(num);
-      num++;
-      cout << "Do you want to take another picture for calibration?[y/n]" << endl;
-      char r;
-      cin >> r;
-      if (r == 'n')
-        endCalibration = true;
-    }
+		cout << "Beginning camera calibration..." << endl;
+		calibrateImages(imageList, num);
+		
+		return EXIT_SUCCESS;
+	}
+	
+	if (std::string(argv[1])=="-r" || std::string(argv[1])=="--run" ){
 
-    for (int i = 0; i < num, i++) {
-      imageList.push_back("test"+i); // no se si puede realizar la operacion por ser string + int
-    }
+		Mat cameraMatrix, distCoeffs;
 
-    cout << "Beginning camera calibration..." << endl;
-
-    calibrateImages(imageList, num);
-
-
-    cout << "Reading camera parameters..." << endl;
-    readYAML();
-
-
-
-
-    
+		cout << "Reading camera parameters..." << endl;
+		readYAML(cameraMatrix,distCoeffs);
+		
+		vector<vector<Point3f>> objectPoints; 
+		vector<vector<Point2f>> imagePoints;
+		vector<Mat> rvecs,tvecs;
+		calibrateCamera(objectPoints, imagePoints, imageSize, cameraMatrix, distCoeffs, rvecs, tvecs);
+	
+		drawAxes();
+	}
+	
 
   } else {
-	  
-    std::cout << "Provide at least one image file to be displayed. \n" 
-              << "Usage: " << argv[0] << " <image1>"
-              << std::endl;
-              
+ 
+    std::cout << "Provide at leat one function. \n" << std::endl;   
     return EXIT_FAILURE;
+    
   }
 
   return EXIT_SUCCESS;
@@ -295,7 +276,9 @@ int main(int argc, char *argv[])
  */
 void help()  {
   std::cout <<
-    "usage: viewer [options] [<file1>]\n\n"        \
+    "usage: viewer [options] \n\n" \
+    "       -c|--calibrate   take pictures to calibrate\n" \ 
+    "       -r|--run         run the augmented reality\n" \  
     "       -h|--help        show this help\n"<< std::endl;    
 }
 
