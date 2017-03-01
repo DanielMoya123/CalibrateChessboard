@@ -56,7 +56,6 @@ fs.release();
 
 // corners = pointbuf de la funcion findChessboardCorners
 // imgpts = outputImagePoints de la funcion projectPoints
-
 cout << "Ready to draw axes..." << endl;
 drawAxes(corners, imgpts);
   
