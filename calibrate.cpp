@@ -23,7 +23,7 @@ const Size imageSize(800,600);
 
 
 
-vector<Point2f> DrawAxis(Mat imageList, Mat cameraMatrix, Mat distCoeffs)
+vector<Point2f> GetPointAxis(Mat imageList, Mat cameraMatrix, Mat distCoeffs)
 {
   
   bool found;
@@ -76,11 +76,9 @@ void drawAxes(Mat cameraMatrix, Mat distCoeffs)
         if( !frame ) break; 
  
         //Draw the lines     
-        Mat imageLines; // = frameMat.clone(); 
-        capture >> imageLines; 
-
-
-        vector<Point2f> outputPoints = DrawAxis(imageLines, Mat cameraMatrix, Mat distCoeffs);
+        Mat imageLines(frame); 
+        
+        vector<Point2f> outputPoints = GetPointAxis(imageLines);
         
         arrowedLine(imageLines, outputPoints[0], outputPoints[1], Scalar(255,  0,   0));
     arrowedLine(imageLines, outputPoints[0], outputPoints[2], Scalar(0,  255,   0));
@@ -95,6 +93,7 @@ void drawAxes(Mat cameraMatrix, Mat distCoeffs)
  
     return 0;  
 }
+
 
 
 // Function to read the yml file
@@ -194,6 +193,30 @@ int calibrateImages(vector<string> imageList, int size, vector<Point2f> pointbuf
   
 }
 
+/*
+vector<Point2f> GetPointAxis(Mat imageList)
+{
+	bool found;
+	Mat view;
+	vector<Point2f> pointbuf;
+	
+	int numSquares = boardSize.height * boardSize.width; // The number of squares
+	vector<vector<Point3f>> objectPoints; 
+	vector<vector<Point2f>> imagePoints;  
+	
+	// Generate the matrix for this image
+	view = imageList
+	found = findChessboardCorners(view, boardSize, pointbuf, CV_CALIB_CB_ADAPTIVE_THRESH);
+	vector<Point3f> obj;
+	for(int j=0;j<numSquares;j++) 
+		obj.push_back(Point3f(j/boardSize.width, j%boardSize.width, 0.0f));
+			
+	imagePoints.push_back(pointbuf);
+	objectPoints.push_back(obj);
+	
+	vector<Mat> rvecs; 
+	vector<Mat> tvecs;
+*/
 
 
 
@@ -274,7 +297,7 @@ int main(int argc, char *argv[])
 		vector<Mat> rvecs,tvecs;
 		calibrateCamera(objectPoints, imagePoints, imageSize, cameraMatrix, distCoeffs, rvecs, tvecs);
 	
-		drawAxes();
+		DrawAxis();
 	}
 	
 
