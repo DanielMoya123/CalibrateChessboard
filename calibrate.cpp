@@ -78,26 +78,25 @@ void drawAxes(Mat cameraMatrix, Mat distCoeffs)
         //Draw the lines     
         Mat imageLines(frame); 
         
-        vector<Point2f> outputPoints = GetPointAxis(imageLines);
+        vector<Point2f> outputPoints = GetPointAxis(imageLines, cameraMatrix, distCoeffs);
         
         arrowedLine(imageLines, outputPoints[0], outputPoints[1], Scalar(255,  0,   0));
-    arrowedLine(imageLines, outputPoints[0], outputPoints[2], Scalar(0,  255,   0));
-    arrowedLine(imageLines, outputPoints[0], outputPoints[3], Scalar(0,    0, 255));
+        arrowedLine(imageLines, outputPoints[0], outputPoints[2], Scalar(0,  255,   0));
+        arrowedLine(imageLines, outputPoints[0], outputPoints[3], Scalar(0,    0, 255));
              
-        imshow("video", contourImage);
+        imshow("video", imageLines); //corregido segundo argumento
         cvWaitKey(40);
     }
  
     // We're through with using camera.   
     cvReleaseCapture( &capture );  
  
-    return 0;  
 }
 
 
 
 // Function to read the yml file
-bool readYAML(Mat cameraMatrix, Mat distCoeffs, vector<Point2f> corners){
+bool readYAML(Mat cameraMatrix, Mat distCoeffs){
   
 	FileStorage fs2("calibrate.yml", FileStorage::READ);
 	
@@ -134,7 +133,6 @@ void writeYAML(const Mat& cameraMatrix, const Mat& distCoeffs){
 	FileStorage fs("calibrate.yml", FileStorage::WRITE);
 	fs << "cameraMatrix" << cameraMatrix << "distCoeffs" << distCoeffs;
     fs.release();
-    return 0;
   
   }
 
@@ -153,8 +151,8 @@ int calibrateImages(vector<string> imageList, int size, vector<Point2f> pointbuf
 	Mat view;
 	//vector<Point2f> pointbuf;
 	int numSquares = boardSize.height * boardSize.width; // The number of squares
-	vector<vector<Point3f>> objectPoints; 
-	vector<vector<Point2f>> imagePoints;  
+	vector<vector <Point3f> > objectPoints; 
+	vector<vector <Point2f> > imagePoints;  
 
 	// Iterate over all images
 	for (int i = 0; i < size; i++){
@@ -246,7 +244,16 @@ void takeImage(string Num)
 
 
 
-
+/*
+ * Help Function
+ */
+void help()  {
+  std::cout <<
+    "usage: viewer [options] \n\n" \
+    "       -c|--calibrate   take pictures to calibrate\n" \ 
+    "       -r|--run         run the augmented reality\n" \  
+    "       -h|--help        show this help\n"<< std::endl;    
+}
 
 
 
@@ -270,9 +277,12 @@ int main(int argc, char *argv[])
 		
 		while (r != 'n')
 		{
-		  takeImage(num);
+      stringstream ss;
+      ss << num;
+      string str = ss.str();
+		  takeImage(str);
 		  num++;
-		  imageList.push_back("test"+std::to_string(num));
+		  imageList.push_back("test"+str);
 		  cout << "Do you want to take another picture for calibration?[y/n]" << endl;
 		  cin >> r;
 		}
@@ -292,12 +302,14 @@ int main(int argc, char *argv[])
 		cout << "Reading camera parameters..." << endl;
 		readYAML(cameraMatrix,distCoeffs);
 		
-		vector<vector<Point3f>> objectPoints; 
-		vector<vector<Point2f>> imagePoints;
+		vector<vector <Point3f> > objectPoints; 
+		vector<vector <Point2f> > imagePoints;
 		vector<Mat> rvecs,tvecs;
-		calibrateCamera(objectPoints, imagePoints, imageSize, cameraMatrix, distCoeffs, rvecs, tvecs);
-	
-		DrawAxis();
+		//calibrateCamera(objectPoints, imagePoints, imageSize, cameraMatrix, distCoeffs, rvecs, tvecs); //eliminado?
+	   
+
+  
+		//DrawAxis(); //eliminado?
 	}
 	
 
@@ -311,16 +323,7 @@ int main(int argc, char *argv[])
   return EXIT_SUCCESS;
 }
 
-/*
- * Help Function
- */
-void help()  {
-  std::cout <<
-    "usage: viewer [options] \n\n" \
-    "       -c|--calibrate   take pictures to calibrate\n" \ 
-    "       -r|--run         run the augmented reality\n" \  
-    "       -h|--help        show this help\n"<< std::endl;    
-}
+
 
 
 
