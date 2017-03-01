@@ -3,7 +3,6 @@
 
 CMakeFiles/calibrate.dir/calibrate.cpp.o: ../calibrate.cpp
 CMakeFiles/calibrate.dir/calibrate.cpp.o: /usr/local/include/opencv/cv.h
-CMakeFiles/calibrate.dir/calibrate.cpp.o: /usr/local/include/opencv/highgui.h
 CMakeFiles/calibrate.dir/calibrate.cpp.o: /usr/local/include/opencv2/calib3d/calib3d.hpp
 CMakeFiles/calibrate.dir/calibrate.cpp.o: /usr/local/include/opencv2/core/core.hpp
 CMakeFiles/calibrate.dir/calibrate.cpp.o: /usr/local/include/opencv2/core/core_c.h

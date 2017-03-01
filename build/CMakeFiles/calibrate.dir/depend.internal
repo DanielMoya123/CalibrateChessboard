@@ -4,7 +4,6 @@
 CMakeFiles/calibrate.dir/calibrate.cpp.o
  /home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard/calibrate.cpp
  /usr/local/include/opencv/cv.h
- /usr/local/include/opencv/highgui.h
  /usr/local/include/opencv2/calib3d/calib3d.hpp
  /usr/local/include/opencv2/core/core.hpp
  /usr/local/include/opencv2/core/core_c.h

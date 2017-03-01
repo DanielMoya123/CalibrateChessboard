@@ -22,18 +22,93 @@ const Size imageSize(800,600);
 
 
 
+
+vector<Point2f> DrawAxis(Mat imageList, Mat cameraMatrix, Mat distCoeffs)
+{
+  
+  bool found;
+  Mat view;
+  vector<Point2f> pointbuf;
+  
+  int numSquares = boardSize.height * boardSize.width; // The number of squares
+  vector<vector <Point3f> > objectPoints; 
+  vector<vector <Point2f> > imagePoints;  
+  
+  // Generate the matrix for this image
+  view = imageList;
+  found = findChessboardCorners(view, boardSize, pointbuf, CV_CALIB_CB_ADAPTIVE_THRESH);
+  vector<Point3f> obj;
+  for(int j=0;j<numSquares;j++) 
+    obj.push_back(Point3f(j/boardSize.width, j%boardSize.width, 0.0f));
+      
+  imagePoints.push_back(pointbuf);
+  objectPoints.push_back(obj);
+  
+  vector<Mat> rvecs; 
+  vector<Mat> tvecs;
+
+    bool temp2 =  solvePnP(objectPoints, imagePoints, cameraMatrix, distCoeffs, rvecs, tvecs);
+    vector<Point2f> outputImagePoints;
+    projectPoints(objectPoints, rvecs, tvecs, cameraMatrix, distCoeffs, outputImagePoints);
+    
+    return outputImagePoints;
+}
+
+/*
+ Tomar los parametros en formato YAML y dibujar los ejes en tiempo real
+*/
+void drawAxes(Mat cameraMatrix, Mat distCoeffs)
+{
+  
+    CvCapture* capture = cvCaptureFromCAM(0);
+    IplImage* frame = cvQueryFrame( capture );
+         
+    // Can't get device? Complain and quit  
+    if( !capture )  
+    {  
+        std::cout << "Could not initialize capturing...\n";   
+    }  
+     
+    while (true)
+    {
+        frame = cvQueryFrame(capture); 
+         
+        if( !frame ) break; 
+ 
+        //Draw the lines     
+        Mat imageLines; // = frameMat.clone(); 
+        capture >> imageLines; 
+
+
+        vector<Point2f> outputPoints = DrawAxis(imageLines, Mat cameraMatrix, Mat distCoeffs);
+        
+        arrowedLine(imageLines, outputPoints[0], outputPoints[1], Scalar(255,  0,   0));
+    arrowedLine(imageLines, outputPoints[0], outputPoints[2], Scalar(0,  255,   0));
+    arrowedLine(imageLines, outputPoints[0], outputPoints[3], Scalar(0,    0, 255));
+             
+        imshow("video", contourImage);
+        cvWaitKey(40);
+    }
+ 
+    // We're through with using camera.   
+    cvReleaseCapture( &capture );  
+ 
+    return 0;  
+}
+
+
 // Function to read the yml file
-bool readYAML(Mat cameraMatrix, Mat distCoeffs){
+bool readYAML(Mat cameraMatrix, Mat distCoeffs, vector<Point2f> corners){
   
 	FileStorage fs2("calibrate.yml", FileStorage::READ);
 	
-	if(FileStorage::isOpened()){
+	if(fs2.isOpened()){
 	 
 		Mat cameraMatrix2, distCoeffs2;
 		fs2["cameraMatrix"] >> cameraMatrix2;
 		fs2["distCoeffs"] >> distCoeffs2;
 		cameraMatrix = cameraMatrix2;
-		distCoeff = distCoeff2;
+		distCoeffs = distCoeffs2;
 		
 		fs2.release();
 
@@ -41,7 +116,11 @@ bool readYAML(Mat cameraMatrix, Mat distCoeffs){
   
 
 		cout << "Ready to draw axes..." << endl;
-		drawAxes(corners, imgpts);
+
+    //vector<Point2f> imgpts = DrawAxis(Mat imageList)
+
+		//drawAxes(corners, imgpts);
+    drawAxes(cameraMatrix, distCoeffs);
 
 		return true;
 	}else{
@@ -69,11 +148,11 @@ void writeYAML(const Mat& cameraMatrix, const Mat& distCoeffs){
 * 	vector<string> imageList: the path to the image
 *   int size: the size of the image 
 */
-int calibrateImages(vector<string> imageList, int size)
+int calibrateImages(vector<string> imageList, int size, vector<Point2f> pointbuf)
 {
 	bool found;
 	Mat view;
-	vector<Point2f> pointbuf;
+	//vector<Point2f> pointbuf;
 	int numSquares = boardSize.height * boardSize.width; // The number of squares
 	vector<vector<Point3f>> objectPoints; 
 	vector<vector<Point2f>> imagePoints;  
@@ -115,35 +194,9 @@ int calibrateImages(vector<string> imageList, int size)
   
 }
 
-vector<Point2f> DrawAxis(Mat imageList)
-{
-	bool found;
-	Mat view;
-	vector<Point2f> pointbuf;
-	
-	int numSquares = boardSize.height * boardSize.width; // The number of squares
-	vector<vector<Point3f>> objectPoints; 
-	vector<vector<Point2f>> imagePoints;  
-	
-	// Generate the matrix for this image
-	view = imageList
-	found = findChessboardCorners(view, boardSize, pointbuf, CV_CALIB_CB_ADAPTIVE_THRESH);
-	vector<Point3f> obj;
-	for(int j=0;j<numSquares;j++) 
-		obj.push_back(Point3f(j/boardSize.width, j%boardSize.width, 0.0f));
-			
-	imagePoints.push_back(pointbuf);
-	objectPoints.push_back(obj);
-	
-	vector<Mat> rvecs; 
-	vector<Mat> tvecs;
 
-    bool temp2 =  solvePnP(objectPoints, imagePoints, cameraMatrix, distCoeffs, rvecs, tvecs);
-    vector<Point2f> outputImagePoints;
-    projectPoints(objectPoints, rvecs, tvecs, cameraMatrix, distCoeffs, outputImagePoints);
-    
-    return outputImagePoints;
-}
+
+
 
 /*
 Tomar todas las fotos que el usuario desee para usarlas posteriormente en la calibración
@@ -170,45 +223,7 @@ void takeImage(string Num)
 
 
 
-/*
- Tomar los parametros en formato YAML y dibujar los ejes en tiempo real
-*/
-void drawAxes()
-{
-  
-    CvCapture* capture = cvCaptureFromCAM(0);
-    IplImage* frame = cvQueryFrame( capture );
-         
-    // Can't get device? Complain and quit  
-    if( !capture )  
-    {  
-        std::cout << "Could not initialize capturing...\n";   
-    }  
-     
-    while (true)
-    {
-        frame = cvQueryFrame(capture); 
-         
-        if( !frame ) break; 
- 
-        //Draw the lines     
-        Mat imageLines = frameMat.clone(); 
-        
-        vector<Point2f> outputPoints = DrawAxis(imageLines);
-        
-        arrowedLine(imageLines, outputPoints[0], outputPoints[1], Scalar(255,  0,   0));
-		arrowedLine(imageLines, outputPoints[0], outputPoints[2], Scalar(0,  255,   0));
-		arrowedLine(imageLines, outputPoints[0], outputPoints[3], Scalar(0,    0, 255));
-             
-        imshow("video", contourImage);
-        cvWaitKey(40);
-    }
- 
-    // We're through with using camera.   
-    cvReleaseCapture( &capture );  
- 
-    return 0;  
-}
+
 
 
 
@@ -240,7 +255,9 @@ int main(int argc, char *argv[])
 		}
 
 		cout << "Beginning camera calibration..." << endl;
-		calibrateImages(imageList, num);
+
+    vector<Point2f> pointbuf;
+		calibrateImages(imageList, num, pointbuf);
 		
 		return EXIT_SUCCESS;
 	}
