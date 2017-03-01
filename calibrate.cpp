@@ -115,7 +115,7 @@ int calibrateImages(vector<string> imageList, int size)
   
 }
 
-vector<Point2f> DrawAxis(Mat imageList)
+vector<Point2f> GetPointAxis(Mat imageList)
 {
 	bool found;
 	Mat view;
@@ -171,9 +171,9 @@ void takeImage(string Num)
 
 
 /*
- Tomar los parametros en formato YAML y dibujar los ejes en tiempo real
+ Draw axis in real time
 */
-void drawAxes()
+void DrawAxis()
 {
   
     CvCapture* capture = cvCaptureFromCAM(0);
@@ -192,9 +192,9 @@ void drawAxes()
         if( !frame ) break; 
  
         //Draw the lines     
-        Mat imageLines = frameMat.clone(); 
+        Mat imageLines(frame); 
         
-        vector<Point2f> outputPoints = DrawAxis(imageLines);
+        vector<Point2f> outputPoints = GetPointAxis(imageLines);
         
         arrowedLine(imageLines, outputPoints[0], outputPoints[1], Scalar(255,  0,   0));
 		arrowedLine(imageLines, outputPoints[0], outputPoints[2], Scalar(0,  255,   0));
@@ -257,7 +257,7 @@ int main(int argc, char *argv[])
 		vector<Mat> rvecs,tvecs;
 		calibrateCamera(objectPoints, imagePoints, imageSize, cameraMatrix, distCoeffs, rvecs, tvecs);
 	
-		drawAxes();
+		DrawAxis();
 	}
 	
 
