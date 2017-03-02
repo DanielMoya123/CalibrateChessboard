@@ -226,7 +226,6 @@ void takeImage(string Num)
 {
 
 	// Take the photo
-	//VideoCapture capture = VideoCapture(0);
   VideoCapture capture = VideoCapture(0);
 
 
@@ -249,7 +248,8 @@ void takeImage(string Num)
 
   //cvReleaseCapture(&capture);
 
-	capture.release();
+	//capture.release();
+
 	// Save the frame into a file
   imwrite(imageName, save_img); // A JPG FILE IS BEING SAVED
   
@@ -283,7 +283,10 @@ int main(int argc, char *argv[])
        help();
        return EXIT_SUCCESS;
     }
-	
+
+    //CvCapture* capture = cvCaptureFromCAM(0);
+	   VideoCapture stream(0);
+
 	if (std::string(argv[1])=="-c" || std::string(argv[1])=="--calibrate" ){
 	
 		cout << "Taking pictures for future calibration..." << endl;
@@ -295,8 +298,34 @@ int main(int argc, char *argv[])
 		{
       stringstream ss;
       ss << num;
-      string str = ss.str();
-		  takeImage(str);
+      string strNum = ss.str();
+
+
+      //put the code itself of takeImage      
+		  //takeImage(str);
+      
+      //IplImage* frame = cvQueryFrame( capture );
+      
+      Mat save_img;
+      //stream.read(save_img);
+      stream >> save_img;
+
+      if(save_img.empty())
+      {
+        std::cerr << "Something is wrong with the webcam, could not get frame." << std::endl;
+      }
+      string str = "test" + strNum + ".jpg";
+      const char *imageName = str.c_str();
+      imwrite(imageName, save_img); // A JPG FILE IS BEING SAVED
+
+
+      
+      
+
+
+
+
+
 		  num++;
 		  imageList.push_back("test"+str);
 		  cout << "Do you want to take another picture for calibration?[y/n]" << endl;
