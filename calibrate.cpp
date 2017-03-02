@@ -17,7 +17,7 @@ using namespace std;
  * Constant Values
  ***************************************/
 
-const Size boardSize(7,6);
+const Size boardSize(10,6);
 const Size imageSize(800,600);
 
 
@@ -80,9 +80,9 @@ void drawAxes(Mat cameraMatrix, Mat distCoeffs)
         
         vector<Point2f> outputPoints = GetPointAxis(imageLines, cameraMatrix, distCoeffs);
         
-        arrowedLine(imageLines, outputPoints[0], outputPoints[1], Scalar(255,  0,   0));
-        arrowedLine(imageLines, outputPoints[0], outputPoints[2], Scalar(0,  255,   0));
-        arrowedLine(imageLines, outputPoints[0], outputPoints[3], Scalar(0,    0, 255));
+        line(imageLines, outputPoints[0], outputPoints[1], Scalar(255,  0,   0));
+        line(imageLines, outputPoints[0], outputPoints[2], Scalar(0,  255,   0));
+        line(imageLines, outputPoints[0], outputPoints[3], Scalar(0,    0, 255));
              
         imshow("video", imageLines); //corregido segundo argumento
         cvWaitKey(40);
@@ -226,19 +226,32 @@ void takeImage(string Num)
 {
 
 	// Take the photo
-	VideoCapture capture = VideoCapture(0);
-  
+	//VideoCapture capture = VideoCapture(0);
+  VideoCapture capture = VideoCapture(0);
+
+
 	// Get the frame
 	Mat save_img; 
 	capture >> save_img; //cambio de cap a capture
 
-	if(save_img.empty())
+  //CvCapture* capture = cvCreateCameraCapture(0);
+  //  IplImage* frame = cvQueryFrame( capture );
+
+
+    if(save_img.empty())
 	{
 		std::cerr << "Something is wrong with the webcam, could not get frame." << std::endl;
 	}
-	
+
+  string str = "test" + Num + ".jpg";
+  const char *imageName = str.c_str();
+  //cvSaveImage(imageName, frame);
+
+  //cvReleaseCapture(&capture);
+
+	capture.release();
 	// Save the frame into a file
-	imwrite("test" + Num + "jpg", save_img); // A JPG FILE IS BEING SAVED
+  imwrite(imageName, save_img); // A JPG FILE IS BEING SAVED
   
 }
 
@@ -249,11 +262,14 @@ void takeImage(string Num)
  */
 void help()  {
   std::cout <<
-    "usage: viewer [options] \n\n" \
-    "       -c|--calibrate   take pictures to calibrate\n" \ 
-    "       -r|--run         run the augmented reality\n" \  
+    "usage: viewer [options] \n" << std::endl;  
+  std::cout <<
+    "       -c|--calibrate   take pictures to calibrate" << std::endl;   
+  std::cout <<
+    "       -r|--run         run the augmented reality" << std::endl;  
+  std::cout << 
     "       -h|--help        show this help\n"<< std::endl;    
-}
+} 
 
 
 
@@ -261,7 +277,7 @@ void help()  {
 int main(int argc, char *argv[])
 {
 
-   if (argc > 2) {
+   if (argc > 1) {
 
     if (std::string(argv[1])=="-h" || std::string(argv[1])=="--help") {
        help();
@@ -273,9 +289,9 @@ int main(int argc, char *argv[])
 		cout << "Taking pictures for future calibration..." << endl;
 		vector<string> imageList;
 		int num = 0;
-		char r = 'n';
+		char r = 'y';
 		
-		while (r != 'n')
+		while (r == 'y')
 		{
       stringstream ss;
       ss << num;
