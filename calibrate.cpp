@@ -154,6 +154,7 @@ int calibrateImages(vector<string> imageList, int size, vector<Point2f> pointbuf
 	vector<vector <Point3f> > objectPoints; 
 	vector<vector <Point2f> > imagePoints;  
 
+
 	// Iterate over all images
 	for (int i = 0; i < size; i++){
 	
@@ -168,11 +169,12 @@ int calibrateImages(vector<string> imageList, int size, vector<Point2f> pointbuf
 		objectPoints.push_back(obj);
 
 	}
+
 	
-	
+	cout << "pasa1" << endl;
     //imageSize – Image size in pixels used to initialize the principal point.
     Mat cameraMatrix =  initCameraMatrix2D(objectPoints, imagePoints, imageSize);
-
+cout << "pasa2" << endl;
 	
 	//Mat cameraMatrix = Mat(3, 3, CV_32FC1); 
 	Mat distCoeffs; 
@@ -286,6 +288,8 @@ int main(int argc, char *argv[])
 
     //CvCapture* capture = cvCaptureFromCAM(0);
 	   VideoCapture stream(0);
+     Mat video;
+     namedWindow("video",1);
 
 	if (std::string(argv[1])=="-c" || std::string(argv[1])=="--calibrate" ){
 	
@@ -293,8 +297,10 @@ int main(int argc, char *argv[])
 		vector<string> imageList;
 		int num = 0;
 		char r = 'y';
-		
-		while (r == 'y')
+		int r_int = 1048697;
+
+
+		while (r_int == 1048697 || r_int == -1)
 		{
       stringstream ss;
       ss << num;
@@ -310,29 +316,42 @@ int main(int argc, char *argv[])
       //stream.read(save_img);
       stream >> save_img;
 
+      //cvtColor(save_img, video, CV_BGR2GRAY);
+       // GaussianBlur(edges, edges, Size(7,7), 1.5, 1.5);
+       // Canny(edges, edges, 0, 30, 3);
+
+        imshow("video", save_img);
+   
+
+
+
       if(save_img.empty())
       {
         std::cerr << "Something is wrong with the webcam, could not get frame." << std::endl;
       }
-      string str = "test" + strNum + ".jpg";
-      const char *imageName = str.c_str();
-      imwrite(imageName, save_img); // A JPG FILE IS BEING SAVED
+
+      // 'n' = 1048686
 
 
-      
-      
+      r_int = waitKey(30);
+      if (r_int == 1048697) { // 'y'
+        string str = "test" + strNum + ".jpg";
+        const char *imageName = str.c_str();
+        imwrite(imageName, save_img); // A JPG FILE IS BEING SAVED
+        num++;
+        imageList.push_back(str);
+        cout << "Do you want to take another picture for calibration?[y/n]" << endl;
+      } 
 
-
-
-
-
-		  num++;
-		  imageList.push_back("test"+str);
-		  cout << "Do you want to take another picture for calibration?[y/n]" << endl;
-		  cin >> r;
+      //cout << "r_int es " << r_int << endl;
+		  //cin >> r;
 		}
 
 		cout << "Beginning camera calibration..." << endl;
+
+    for (int i = 0; i < num; i++){
+      cout << "nombre imagen en " << i << " es " << imageList[i] << endl;
+    }
 
     vector<Point2f> pointbuf;
 		calibrateImages(imageList, num, pointbuf);
