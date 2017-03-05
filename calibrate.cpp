@@ -18,7 +18,7 @@ using namespace std;
  ***************************************/
 
 const Size boardSize(10,6);
-const Size imageSize(800,600);
+const Size imageSize(640,480);
 
 
 
