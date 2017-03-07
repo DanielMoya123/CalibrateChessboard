@@ -17,39 +17,66 @@ using namespace std;
  * Constant Values
  ***************************************/
 
-const Size boardSize(10,6);
+const Size boardSize(9,6);
 const Size imageSize(640,480);
 
 
 
 
-vector<Point2f> GetPointAxis(Mat imageList, Mat cameraMatrix, Mat distCoeffs)
+vector<Point2f> GetPointAxes(Mat imageList, Mat cameraMatrix, Mat distCoeffs)
 {
   
   bool found;
-  Mat view;
+  //Mat view;
   vector<Point2f> pointbuf;
+  vector<Point2f> outputImagePoints;
   
   int numSquares = boardSize.height * boardSize.width; // The number of squares
-  vector<vector <Point3f> > objectPoints; 
-  vector<vector <Point2f> > imagePoints;  
+  //vector<vector <Point3f> > objectPoints; 
+  //vector<vector <Point2f> > imagePoints;  
+  //cout << "in1" << endl;
   
   // Generate the matrix for this image
-  view = imageList;
-  found = findChessboardCorners(view, boardSize, pointbuf, CV_CALIB_CB_ADAPTIVE_THRESH);
+  //view = imageList;
+  found = findChessboardCorners(imageList, boardSize, pointbuf, CV_CALIB_CB_ADAPTIVE_THRESH | CV_CALIB_CB_NORMALIZE_IMAGE | CALIB_CB_FAST_CHECK);
   vector<Point3f> obj;
-  for(int j=0;j<numSquares;j++) 
-    obj.push_back(Point3f(j/boardSize.width, j%boardSize.width, 0.0f));
-      
-  imagePoints.push_back(pointbuf);
-  objectPoints.push_back(obj);
-  
-  vector<Mat> rvecs; 
-  vector<Mat> tvecs;
+  //obj.push_back(Point3f(0, 0, 1.0f));
 
-    bool temp2 =  solvePnP(objectPoints, imagePoints, cameraMatrix, distCoeffs, rvecs, tvecs);
-    vector<Point2f> outputImagePoints;
-    projectPoints(objectPoints, rvecs, tvecs, cameraMatrix, distCoeffs, outputImagePoints);
+  if (found){
+
+
+
+    vector<Point3f> z3d;
+    //cout << found << endl;
+    for(int j=0;j<numSquares;j++) {
+      obj.push_back(Point3f(j/boardSize.width, j%boardSize.width, 0.0f));
+    }
+        
+    z3d.push_back(Point3f(0.0f,0.0f,1.0f));
+    
+    //objectPoints.push_back(obj);
+
+          //Mat imageLines(frame); 
+
+          //cout << "tam cam " << cameraMatrix.size() << endl;
+          //cout << "tam dist" << distCoeff
+
+    //cout << "in3" << endl;
+    Mat rvecs;
+
+    Mat tvecs;
+
+
+      bool temp2 =  solvePnP(obj, pointbuf, cameraMatrix, distCoeffs, rvecs, tvecs);
+      //cout << "in4" << endl;
+      
+      vector<Point2f> outputImagePoints2;
+      projectPoints(obj, rvecs, tvecs, cameraMatrix, distCoeffs, outputImagePoints);
+      projectPoints(z3d, rvecs, tvecs, cameraMatrix, distCoeffs, outputImagePoints2);
+
+      outputImagePoints.push_back(outputImagePoints2[0]);
+    }
+
     
     return outputImagePoints;
 }
@@ -59,37 +86,68 @@ vector<Point2f> GetPointAxis(Mat imageList, Mat cameraMatrix, Mat distCoeffs)
 */
 void drawAxes(Mat cameraMatrix, Mat distCoeffs)
 {
+
+    //cout << "entra" << endl; 
   
-    CvCapture* capture = cvCaptureFromCAM(0);
-    IplImage* frame = cvQueryFrame( capture );
-         
+    //CvCapture* capture = cvCaptureFromCAM(0);
+    //IplImage* frame = cvQueryFrame( capture );
+    VideoCapture stream(0);
+    namedWindow("video",1);
+     
+
+
+  
+    //cout << "entra2" << endl; 
+
     // Can't get device? Complain and quit  
-    if( !capture )  
+    /*if( !capture )  
     {  
         std::cout << "Could not initialize capturing...\n";   
-    }  
+    }  */
      
     while (true)
     {
-        frame = cvQueryFrame(capture); 
+        //cout << "entra3" << endl;
+        //frame = cvQueryFrame(capture); 
          
-        if( !frame ) break; 
+        //if( !frame ) break; 
+
+
+
+        // Get the frame
+        Mat imageLines; 
+        stream >> imageLines; //cambio de cap a capture
+
+
+        if(imageLines.empty())
+        {
+          std::cerr << "Something is wrong with the webcam, could not get frame.(2)" << std::endl;
+          break;
+        }
  
         //Draw the lines     
-        Mat imageLines(frame); 
+        //Mat imageLines(frame); 
+
+        //cout << "tam cam " << cameraMatrix.size() << endl;
+        //cout << "tam dist" << distCoeffs.size() << endl;
         
-        vector<Point2f> outputPoints = GetPointAxis(imageLines, cameraMatrix, distCoeffs);
-        
-        line(imageLines, outputPoints[0], outputPoints[1], Scalar(255,  0,   0));
-        line(imageLines, outputPoints[0], outputPoints[2], Scalar(0,  255,   0));
-        line(imageLines, outputPoints[0], outputPoints[3], Scalar(0,    0, 255));
-             
+        vector<Point2f> outputPoints = GetPointAxes(imageLines, cameraMatrix, distCoeffs);
+        //cout << "entra6" << endl;
+        //cout << "output tam " << outputPoints.size() << endl;
+        if(!outputPoints.empty()) {
+          line(imageLines, outputPoints[0], outputPoints[1], Scalar(255,  0,   0));
+          line(imageLines, outputPoints[0], outputPoints[9], Scalar(0,  255,   0));
+          line(imageLines, outputPoints[0], outputPoints[54], Scalar(0,    0, 255));
+        }
+        //cout << "entra4" << endl;
+
         imshow("video", imageLines); //corregido segundo argumento
-        cvWaitKey(40);
+        waitKey(30);
+        //cout << "entra5" << endl;
     }
  
     // We're through with using camera.   
-    cvReleaseCapture( &capture );  
+    //cvReleaseCapture( capture );  
  
 }
 
@@ -129,6 +187,9 @@ bool readYAML(Mat cameraMatrix, Mat distCoeffs){
 
 // Function to write the yml file
 void writeYAML(const Mat& cameraMatrix, const Mat& distCoeffs){ 
+
+  cout << "tam cam " << cameraMatrix.size() << endl;
+  cout << "tam dist" << distCoeffs.size() << endl;
   
 	FileStorage fs("calibrate.yml", FileStorage::WRITE);
 	fs << "cameraMatrix" << cameraMatrix << "distCoeffs" << distCoeffs;
@@ -145,36 +206,56 @@ void writeYAML(const Mat& cameraMatrix, const Mat& distCoeffs){
 * 	vector<string> imageList: the path to the image
 *   int size: the size of the image 
 */
-int calibrateImages(vector<string> imageList, int size, vector<Point2f> pointbuf)
+int calibrateImages(vector<string> imageList, int cantImg)
 {
 	bool found;
 	Mat view;
-	//vector<Point2f> pointbuf;
+	vector<Point2f> pointbuf;
 	int numSquares = boardSize.height * boardSize.width; // The number of squares
 	vector<vector <Point3f> > objectPoints; 
 	vector<vector <Point2f> > imagePoints;  
 
+  vector<Point3f> obj;
+  for(int j=0;j<numSquares;j++) 
+    {
+      obj.push_back(Point3f(j/boardSize.width, j%boardSize.width, 0.0f));
+    }
 
 	// Iterate over all images
-	for (int i = 0; i < size; i++){
+	for (int i = 0; i < cantImg; i++){
 	
 		// Generate the matrix for this image
 		view = imread(imageList[i], 1);
+
+
 		found = findChessboardCorners(view, boardSize, pointbuf, CV_CALIB_CB_ADAPTIVE_THRESH);
-		vector<Point3f> obj;
-		for(int j=0;j<numSquares;j++) 
-			obj.push_back(Point3f(j/boardSize.width, j%boardSize.width, 0.0f));
+		
+    
+		
 			
 		imagePoints.push_back(pointbuf);
 		objectPoints.push_back(obj);
 
+
 	}
 
 	
-	cout << "pasa1" << endl;
+	cout << "cant " <<  cantImg << endl;
     //imageSize – Image size in pixels used to initialize the principal point.
+
+  cout << "tamanio obj " << objectPoints.size() << endl;
+
+  cout << "tamanio image" << imagePoints.size() << endl;
+
+  for (int i = 0; i < objectPoints.size(); i++){
+      cout << "tamanio obj en " << i << " es " << objectPoints[i].size() << endl;
+      cout << "tamanio img en " << i << " es " << imagePoints[i].size() << endl;
+  }
+
+
+
     Mat cameraMatrix =  initCameraMatrix2D(objectPoints, imagePoints, imageSize);
-cout << "pasa2" << endl;
+  cout << "pasa2" << endl;
 	
 	//Mat cameraMatrix = Mat(3, 3, CV_32FC1); 
 	Mat distCoeffs; 
@@ -193,69 +274,11 @@ cout << "pasa2" << endl;
   
 }
 
-/*
-vector<Point2f> GetPointAxis(Mat imageList)
-{
-	bool found;
-	Mat view;
-	vector<Point2f> pointbuf;
-	
-	int numSquares = boardSize.height * boardSize.width; // The number of squares
-	vector<vector<Point3f>> objectPoints; 
-	vector<vector<Point2f>> imagePoints;  
-	
-	// Generate the matrix for this image
-	view = imageList
-	found = findChessboardCorners(view, boardSize, pointbuf, CV_CALIB_CB_ADAPTIVE_THRESH);
-	vector<Point3f> obj;
-	for(int j=0;j<numSquares;j++) 
-		obj.push_back(Point3f(j/boardSize.width, j%boardSize.width, 0.0f));
-			
-	imagePoints.push_back(pointbuf);
-	objectPoints.push_back(obj);
-	
-	vector<Mat> rvecs; 
-	vector<Mat> tvecs;
-*/
 
 
 
 
-/*
-Tomar todas las fotos que el usuario desee para usarlas posteriormente en la calibración
-*/
-void takeImage(string Num)
-{
 
-	// Take the photo
-  VideoCapture capture = VideoCapture(0);
-
-
-	// Get the frame
-	Mat save_img; 
-	capture >> save_img; //cambio de cap a capture
-
-  //CvCapture* capture = cvCreateCameraCapture(0);
-  //  IplImage* frame = cvQueryFrame( capture );
-
-
-    if(save_img.empty())
-	{
-		std::cerr << "Something is wrong with the webcam, could not get frame." << std::endl;
-	}
-
-  string str = "test" + Num + ".jpg";
-  const char *imageName = str.c_str();
-  //cvSaveImage(imageName, frame);
-
-  //cvReleaseCapture(&capture);
-
-	//capture.release();
-
-	// Save the frame into a file
-  imwrite(imageName, save_img); // A JPG FILE IS BEING SAVED
-  
-}
 
 
 
@@ -287,11 +310,11 @@ int main(int argc, char *argv[])
     }
 
     //CvCapture* capture = cvCaptureFromCAM(0);
-	   VideoCapture stream(0);
-     Mat video;
-     namedWindow("video",1);
+	   
 
 	if (std::string(argv[1])=="-c" || std::string(argv[1])=="--calibrate" ){
+    VideoCapture stream(0);
+     namedWindow("video",1);
 	
 		cout << "Taking pictures for future calibration..." << endl;
 		vector<string> imageList;
@@ -353,8 +376,8 @@ int main(int argc, char *argv[])
       cout << "nombre imagen en " << i << " es " << imageList[i] << endl;
     }
 
-    vector<Point2f> pointbuf;
-		calibrateImages(imageList, num, pointbuf);
+    //vector<Point2f> pointbuf;
+		calibrateImages(imageList, num);
 		
 		return EXIT_SUCCESS;
 	}
