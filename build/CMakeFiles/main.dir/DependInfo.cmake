@@ -4,7 +4,9 @@ SET(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_CXX
-  "/home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/calibrate.cpp" "/home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/build/CMakeFiles/calibrate.dir/calibrate.cpp.o"
+  "/home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/Camera.cpp" "/home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/build/CMakeFiles/main.dir/Camera.cpp.o"
+  "/home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/YmlRW.cpp" "/home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/build/CMakeFiles/main.dir/YmlRW.cpp.o"
+  "/home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/main.cpp" "/home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/build/CMakeFiles/main.dir/main.cpp.o"
   )
 SET(CMAKE_CXX_COMPILER_ID "GNU")
 

@@ -52,7 +52,7 @@ vector<Point2f> GetPointAxes(Mat imageList, Mat cameraMatrix, Mat distCoeffs)
       obj.push_back(Point3f(j/boardSize.width, j%boardSize.width, 0.0f));
     }
         
-    z3d.push_back(Point3f(0.0f,0.0f,1.0f));
+    z3d.push_back(Point3f(0.0f,0.0f,3.0f));
     
     //objectPoints.push_back(obj);
 
@@ -135,9 +135,9 @@ void drawAxes(Mat cameraMatrix, Mat distCoeffs)
         //cout << "entra6" << endl;
         //cout << "output tam " << outputPoints.size() << endl;
         if(!outputPoints.empty()) {
-          line(imageLines, outputPoints[0], outputPoints[1], Scalar(255,  0,   0));
-          line(imageLines, outputPoints[0], outputPoints[9], Scalar(0,  255,   0));
-          line(imageLines, outputPoints[0], outputPoints[54], Scalar(0,    0, 255));
+          line(imageLines, outputPoints[0], outputPoints[3], Scalar(255,  0,   0), 3);
+          line(imageLines, outputPoints[0], outputPoints[27], Scalar(0,  255,   0), 3);
+          line(imageLines, outputPoints[0], outputPoints[54], Scalar(0,    0, 255), 3);
         }
         //cout << "entra4" << endl;
 

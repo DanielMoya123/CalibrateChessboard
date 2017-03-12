@@ -35,10 +35,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard"
+CMAKE_SOURCE_DIR = /home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard/build"
+CMAKE_BINARY_DIR = /home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/calibrate.dir/depend.make
@@ -51,17 +51,17 @@ include CMakeFiles/calibrate.dir/flags.make
 
 CMakeFiles/calibrate.dir/calibrate.cpp.o: CMakeFiles/calibrate.dir/flags.make
 CMakeFiles/calibrate.dir/calibrate.cpp.o: ../calibrate.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report "/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard/build/CMakeFiles" $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/calibrate.dir/calibrate.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/calibrate.dir/calibrate.cpp.o -c "/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard/calibrate.cpp"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/calibrate.dir/calibrate.cpp.o -c /home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/calibrate.cpp
 
 CMakeFiles/calibrate.dir/calibrate.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/calibrate.dir/calibrate.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E "/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard/calibrate.cpp" > CMakeFiles/calibrate.dir/calibrate.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/calibrate.cpp > CMakeFiles/calibrate.dir/calibrate.cpp.i
 
 CMakeFiles/calibrate.dir/calibrate.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/calibrate.dir/calibrate.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S "/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard/calibrate.cpp" -o CMakeFiles/calibrate.dir/calibrate.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/calibrate.cpp -o CMakeFiles/calibrate.dir/calibrate.cpp.s
 
 CMakeFiles/calibrate.dir/calibrate.cpp.o.requires:
 .PHONY : CMakeFiles/calibrate.dir/calibrate.cpp.o.requires
@@ -130,6 +130,6 @@ CMakeFiles/calibrate.dir/clean:
 .PHONY : CMakeFiles/calibrate.dir/clean
 
 CMakeFiles/calibrate.dir/depend:
-	cd "/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard" "/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard" "/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard/build" "/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard/build" "/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard/build/CMakeFiles/calibrate.dir/DependInfo.cmake" --color=$(COLOR)
+	cd /home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard /home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard /home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/build /home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/build /home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/build/CMakeFiles/calibrate.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/calibrate.dir/depend
 

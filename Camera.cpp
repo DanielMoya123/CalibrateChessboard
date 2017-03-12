@@ -97,10 +97,10 @@ Camera::Camera(void) {
  * 		Size imageSize: The size of the image, 
  * 						size restricted by the limit of the Size class	
  *****/
-void Camera::InitializateInitValues(Size boardSize,Size imageSize){
+void Camera::InitializateInitValues(Size pboardSize,Size pimageSize){
 	
-	boardSize = boardSize;
-	imageSize = imageSize;
+	boardSize = pboardSize;
+	imageSize = pimageSize;
 	numSquares = boardSize.height * boardSize.width;
     
     // Iterate and fill Obj with all the inner points of the board
@@ -134,12 +134,12 @@ void Camera::InitializateInitValues(Size boardSize,Size imageSize){
  *****/
 vector<Point2f> Camera::GetPointAxes(Mat imageList, Mat cameraMatrix, Mat distCoeffs)
 {
-
+	vector<Point2f> pointbuf,z3dImagePoint,outputImagePoints;
 	// Ask if the algorithm found a chessboard in the image
 	if (findChessboardCorners(imageList, boardSize, pointbuf, FLAGS)){
 
 		// The variables of the functions
-		vector<Point2f> pointbuf,z3dImagePoint,outputImagePoints;
+		
 		Mat rvecs, tvecs;
 		
 		// Solve the PnP with the points that we get before

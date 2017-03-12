@@ -9,18 +9,21 @@
 #include "opencv2/calib3d/calib3d.hpp"
 #include "opencv2/highgui/highgui.hpp"
 
+using namespace cv;
+using namespace std;
 class Camera
 {
 	public:
 		Camera();
 		Camera(Size boardSize,Size imageSize);
-		void CalibrateImages(vector<string> imageList);
+		vector<Mat> CalibrateImages(vector<string> imageList);
 		vector<Point2f> GetPointAxes(Mat imageList, Mat cameraMatrix, Mat distCoeffs);
+		Size imageSize;
 	private:
 		Size boardSize;
-		Size imageSize;
 		int numSquares;
-		const int FLAGS;
+		void InitializateInitValues(Size boardSize,Size imageSize);
+		const int FLAGS = CV_CALIB_CB_ADAPTIVE_THRESH | CV_CALIB_CB_NORMALIZE_IMAGE | CALIB_CB_FAST_CHECK;
 		vector<Point3f> obj;
 		vector<Point3f> z3d;
 };

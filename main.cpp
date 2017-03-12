@@ -109,7 +109,9 @@ int main(int argc, char *argv[])
 		vector<vector <Point2f> > imagePoints;
 		vector<Mat> rvecs,tvecs;
 		
-		calibrateCamera(objectPoints, imagePoints, imageSize, matricesResponse[0], matricesResponse[1], rvecs, tvecs);
+		
+		calibrateCamera(objectPoints, imagePoints, camera.imageSize, matricesResponse[0], matricesResponse[1], rvecs, tvecs);
+		cout << "aqui2" << endl;
 
 		VideoCapture stream(0);
 		namedWindow("video",1);
@@ -127,7 +129,7 @@ int main(int argc, char *argv[])
 				return EXIT_FAILURE;
 			}
 			
-			vector<Point2f> outputPoints = camera.GetPointAxes(imageLines, cameraMatrix, distCoeffs);
+			vector<Point2f> outputPoints = camera.GetPointAxes(imageLines, matricesResponse[0], matricesResponse[1]);
 			
 			if(!outputPoints.empty()) {
 				line(imageLines, outputPoints[0], outputPoints[3], Scalar(255,  0,   0),2);

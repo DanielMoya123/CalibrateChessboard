@@ -47,44 +47,44 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard"
+CMAKE_SOURCE_DIR = /home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard/build"
+CMAKE_BINARY_DIR = /home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/build
 
 #=============================================================================
-# Target rules for target CMakeFiles/calibrate.dir
+# Target rules for target CMakeFiles/main.dir
 
 # All Build rule for target.
-CMakeFiles/calibrate.dir/all:
-	$(MAKE) -f CMakeFiles/calibrate.dir/build.make CMakeFiles/calibrate.dir/depend
-	$(MAKE) -f CMakeFiles/calibrate.dir/build.make CMakeFiles/calibrate.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report "/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard/build/CMakeFiles"  1
-	@echo "Built target calibrate"
-.PHONY : CMakeFiles/calibrate.dir/all
+CMakeFiles/main.dir/all:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/depend
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/build/CMakeFiles  1 2 3
+	@echo "Built target main"
+.PHONY : CMakeFiles/main.dir/all
 
 # Include target in all.
-all: CMakeFiles/calibrate.dir/all
+all: CMakeFiles/main.dir/all
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/calibrate.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard/build/CMakeFiles" 1
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/calibrate.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard/build/CMakeFiles" 0
-.PHONY : CMakeFiles/calibrate.dir/rule
+CMakeFiles/main.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/build/CMakeFiles 3
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/main.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/build/CMakeFiles 0
+.PHONY : CMakeFiles/main.dir/rule
 
 # Convenience name for target.
-calibrate: CMakeFiles/calibrate.dir/rule
-.PHONY : calibrate
+main: CMakeFiles/main.dir/rule
+.PHONY : main
 
 # clean rule for target.
-CMakeFiles/calibrate.dir/clean:
-	$(MAKE) -f CMakeFiles/calibrate.dir/build.make CMakeFiles/calibrate.dir/clean
-.PHONY : CMakeFiles/calibrate.dir/clean
+CMakeFiles/main.dir/clean:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/clean
+.PHONY : CMakeFiles/main.dir/clean
 
 # clean rule for target.
-clean: CMakeFiles/calibrate.dir/clean
+clean: CMakeFiles/main.dir/clean
 .PHONY : clean
 
 #=============================================================================

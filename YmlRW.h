@@ -3,10 +3,19 @@
 #include <string.h>
 #include <cctype>
 
+#include <opencv/cv.h>
+#include "opencv2/core/core.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/calib3d/calib3d.hpp"
+#include "opencv2/highgui/highgui.hpp"
+
+using namespace cv;
+using namespace std;
+
 class YmlRW
 {
 	public:
 		YmlRW();
-		ReadYAML(Mat cameraMatrix, Mat distCoeffs);
-		WriteYAML(Mat cameraMatrix,Mat distCoeffs);
+		vector<Mat> ReadYAML();
+		void WriteYAML(Mat cameraMatrix,Mat distCoeffs);
 };

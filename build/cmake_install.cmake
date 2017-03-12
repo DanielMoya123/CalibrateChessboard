@@ -1,4 +1,4 @@
-# Install script for directory: /home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard
+# Install script for directory: /home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard
 
 # Set the install prefix
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -38,7 +38,7 @@ ELSE(CMAKE_INSTALL_COMPONENT)
   SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 ENDIF(CMAKE_INSTALL_COMPONENT)
 
-FILE(WRITE "/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard/build/${CMAKE_INSTALL_MANIFEST}" "")
+FILE(WRITE "/home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/build/${CMAKE_INSTALL_MANIFEST}" "")
 FOREACH(file ${CMAKE_INSTALL_MANIFEST_FILES})
-  FILE(APPEND "/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard/build/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
+  FILE(APPEND "/home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/build/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
 ENDFOREACH(file)

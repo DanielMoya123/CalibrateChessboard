@@ -39,10 +39,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard"
+CMAKE_SOURCE_DIR = /home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard/build"
+CMAKE_BINARY_DIR = /home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -69,9 +69,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard/build/CMakeFiles" "/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard/build/CMakeFiles/progress.marks"
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/build/CMakeFiles /home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/daniel/Procesamiento Imagenes/Proyecto1/CalibrateChessboard/build/CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -99,41 +99,89 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named calibrate
+# Target rules for targets named main
 
 # Build rule for target.
-calibrate: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 calibrate
-.PHONY : calibrate
+main: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 main
+.PHONY : main
 
 # fast build rule for target.
-calibrate/fast:
-	$(MAKE) -f CMakeFiles/calibrate.dir/build.make CMakeFiles/calibrate.dir/build
-.PHONY : calibrate/fast
+main/fast:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
+.PHONY : main/fast
 
-calibrate.o: calibrate.cpp.o
-.PHONY : calibrate.o
+Camera.o: Camera.cpp.o
+.PHONY : Camera.o
 
 # target to build an object file
-calibrate.cpp.o:
-	$(MAKE) -f CMakeFiles/calibrate.dir/build.make CMakeFiles/calibrate.dir/calibrate.cpp.o
-.PHONY : calibrate.cpp.o
+Camera.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Camera.cpp.o
+.PHONY : Camera.cpp.o
 
-calibrate.i: calibrate.cpp.i
-.PHONY : calibrate.i
+Camera.i: Camera.cpp.i
+.PHONY : Camera.i
 
 # target to preprocess a source file
-calibrate.cpp.i:
-	$(MAKE) -f CMakeFiles/calibrate.dir/build.make CMakeFiles/calibrate.dir/calibrate.cpp.i
-.PHONY : calibrate.cpp.i
+Camera.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Camera.cpp.i
+.PHONY : Camera.cpp.i
 
-calibrate.s: calibrate.cpp.s
-.PHONY : calibrate.s
+Camera.s: Camera.cpp.s
+.PHONY : Camera.s
 
 # target to generate assembly for a file
-calibrate.cpp.s:
-	$(MAKE) -f CMakeFiles/calibrate.dir/build.make CMakeFiles/calibrate.dir/calibrate.cpp.s
-.PHONY : calibrate.cpp.s
+Camera.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/Camera.cpp.s
+.PHONY : Camera.cpp.s
+
+YmlRW.o: YmlRW.cpp.o
+.PHONY : YmlRW.o
+
+# target to build an object file
+YmlRW.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/YmlRW.cpp.o
+.PHONY : YmlRW.cpp.o
+
+YmlRW.i: YmlRW.cpp.i
+.PHONY : YmlRW.i
+
+# target to preprocess a source file
+YmlRW.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/YmlRW.cpp.i
+.PHONY : YmlRW.cpp.i
+
+YmlRW.s: YmlRW.cpp.s
+.PHONY : YmlRW.s
+
+# target to generate assembly for a file
+YmlRW.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/YmlRW.cpp.s
+.PHONY : YmlRW.cpp.s
+
+main.o: main.cpp.o
+.PHONY : main.o
+
+# target to build an object file
+main.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.o
+.PHONY : main.cpp.o
+
+main.i: main.cpp.i
+.PHONY : main.i
+
+# target to preprocess a source file
+main.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.i
+.PHONY : main.cpp.i
+
+main.s: main.cpp.s
+.PHONY : main.s
+
+# target to generate assembly for a file
+main.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.s
+.PHONY : main.cpp.s
 
 # Help Target
 help:
@@ -141,12 +189,18 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... calibrate"
 	@echo "... edit_cache"
+	@echo "... main"
 	@echo "... rebuild_cache"
-	@echo "... calibrate.o"
-	@echo "... calibrate.i"
-	@echo "... calibrate.s"
+	@echo "... Camera.o"
+	@echo "... Camera.i"
+	@echo "... Camera.s"
+	@echo "... YmlRW.o"
+	@echo "... YmlRW.i"
+	@echo "... YmlRW.s"
+	@echo "... main.o"
+	@echo "... main.i"
+	@echo "... main.s"
 .PHONY : help
 
 
