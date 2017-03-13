@@ -6,10 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/Camera.cpp
-Camera.h
-/home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/Camera.h
-
 /home/daniel/ProcesamientoImagenes/Proyecto1/CalibrateChessboard/Camera.h
 stdlib.h
 -
