@@ -208,6 +208,8 @@ vector<Mat> Camera::CalibrateImages(vector<string> imageList)
 		
 		outputPoints.push_back(cameraMatrix);
 		outputPoints.push_back(distCoeffs);
+
+		return outputPoints;
   
 	}
 }

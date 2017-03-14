@@ -125,9 +125,9 @@ int main(int argc, char *argv[])
 			vector<Point2f> outputPoints = camera.GetPointAxes(imageLines, matricesResponse[0], matricesResponse[1]);
 			
 			if(!outputPoints.empty()) {
-				line(imageLines, outputPoints[0], outputPoints[3], Scalar(255,  0,   0), 3);
-				line(imageLines, outputPoints[0], outputPoints[27], Scalar(0,  255,   0), 3);
-				line(imageLines, outputPoints[0], outputPoints[outputPoints.size()-1], Scalar(0,    0, 255), 3);
+				line(imageLines, outputPoints[0], outputPoints[3], Scalar(0,  255,   0), 3);
+				line(imageLines, outputPoints[0], outputPoints[27], Scalar(0,  0,   255), 3);
+				line(imageLines, outputPoints[0], outputPoints[outputPoints.size()-1], Scalar(255, 0, 0), 3);
 			}
 
 			imshow("video", imageLines);
